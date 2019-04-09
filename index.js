@@ -55,6 +55,10 @@ function parametrs(command) {
         });
 
         console.log(result);
+
+        result.forEach(function (item, i, phoneBook) {
+            document.write(phoneBook[i].contactName + ":" + phoneBook[i].contactNumbers + "<br>");
+        });
     }
 
         /*
