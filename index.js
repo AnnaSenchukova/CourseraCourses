@@ -5,26 +5,31 @@ var phoneBook = [];
  * @param {String} command
  * @returns {*} - результат зависит от команды
  */
-function parametrs(command) {
+function parseRequestParams(command) {
     var arrayParametrs = command.split(' ');
-
-    for (var i = 0; i < arrayParametrs.length; i++) {
-        var commandName = arrayParametrs[0];
-        commandName.toString();
-
-        console.log(commandName);
+    return {
+        commandName: arrayParametrs[0].toString(),
+        contactName: arrayParametrs[1].toString(),
+        contactNumbers: arrayParametrs[2].split(",")
     }
+}
+
+function parametrs(command) {
+    const requestParams = parseRequestParams(command);
+
+        console.log(requestParams);
+
 
     if (commandName === 'ADD') {
         // Если такой контакт существует, то команда пополняет список телефонов контакта.
 
-        phoneBook.forEach(function (item, i, arr) {
+        /*phoneBook.forEach(function (item, i, arr) {
             if(item.contactName === arrayParametrs[1]) {
                item.contactNumbers = [];
                item.contactNumbers.push(arrayParametrs[2]);
             }
-            console.log(item.contactName + item.contactNumbers);
-        });
+            console.log('Массив' + item.contactName + item.contactNumbers);
+        });*/
 
 
 
@@ -35,6 +40,7 @@ function parametrs(command) {
                 return '' + this.contactName;
             },
             contactNumbers: arrayParametrs[2],
+
         };
 
         newContact.toString();
