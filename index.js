@@ -16,6 +16,17 @@ function parametrs(command) {
     }
 
     if (commandName === 'ADD') {
+        // Если такой контакт существует, то команда пополняет список телефонов контакта.
+
+        phoneBook.forEach(function (item, i, arr) {
+            if(item.contactName === arrayParametrs[1]) {
+               item.contactNumbers = arrayParametrs[2];
+            }
+            console.log(item + i + arr);
+        });
+
+
+
         const newContact = {
             contactName: arrayParametrs[1],
             toString: function() {
@@ -32,8 +43,9 @@ function parametrs(command) {
     console.log(phoneBook);
 
     if (commandName === 'SHOW') {
-        var mapped = phoneBook.map(function (elem, i) {
+        // Контакт с пустым списком телефонов не должен возвращаться.
 
+        var mapped = phoneBook.map(function (elem, i) {
             console.log(elem.contactName);
             return {index: i, value: String(elem.contactName).toLowerCase()};
         });
@@ -117,5 +129,6 @@ function parametrs(command) {
 
 parametrs('ADD Bame 123,231');
 parametrs('ADD aame 234,556');
-parametrs('ADD');
+parametrs('ADD aame 222,555');
+parametrs('ADD nae');
 parametrs('SHOW');
