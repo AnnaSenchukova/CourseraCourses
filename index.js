@@ -20,9 +20,10 @@ function parametrs(command) {
 
         phoneBook.forEach(function (item, i, arr) {
             if(item.contactName === arrayParametrs[1]) {
-               item.contactNumbers = arrayParametrs[2];
+               item.contactNumbers = [];
+               item.contactNumbers.push(arrayParametrs[2]);
             }
-            console.log(item + i + arr);
+            console.log(item.contactName + item.contactNumbers);
         });
 
 
