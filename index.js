@@ -1,141 +1,121 @@
 // Телефонная книга
 var phoneBook = [];
 
+
+
+
 /**
  * @param {String} command
  * @returns {*} - результат зависит от команды
  */
-function parseRequestParams(command) {
-    var arrayParametrs = command.split(' ');
-    return {
-        commandName: arrayParametrs[0].toString(),
-        contactName: arrayParametrs[1].toString(),
-        contactNumbers: arrayParametrs[2].split(",")
+function parametrs(requestString) {
+
+    const requestParams = parseRequestParams(requestString);
+    console.log(requestParams);
+
+    switch (requestParams.command) {
+        case ("ADD") : {
+            performAddCommand(requestParams);
+            break;
+        }
+        case ("SHOW") : {
+            performShowCommand(requestParams);
+            break;
+        }
+        case ("REMOVE_PHONE") : {
+            performRemovePhoneCommand(requestParams);
+            break;
+        }
+        // default :
     }
 }
 
-function parametrs(command) {
-    const requestParams = parseRequestParams(command);
+function parseRequestParams(requestString) {
+    var arrayParametrs = requestString.split(' ');
+    return {
+        command: arrayParametrs[0].toString(),
+        contactName: arrayParametrs[1] ? arrayParametrs[1].toString() : "",
+        contactNumbers: arrayParametrs[2] ? arrayParametrs[2].split(",") : null
+    }
+}
 
-        console.log(requestParams);
+function getContactByName(contactName) {
 
+    for (var i = 0; i < phoneBook.length; i++) {
+        var currentContact = phoneBook[i];
+        if (currentContact.contactName == contactName) {
+            return currentContact;
+        }
+    }
 
-    if (commandName === 'ADD') {
-        // Если такой контакт существует, то команда пополняет список телефонов контакта.
+    return null;
+}
 
-        /*phoneBook.forEach(function (item, i, arr) {
-            if(item.contactName === arrayParametrs[1]) {
-               item.contactNumbers = [];
-               item.contactNumbers.push(arrayParametrs[2]);
-            }
-            console.log('Массив' + item.contactName + item.contactNumbers);
-        });*/
+function performAddCommand(requestParams) {
+    // Если такой контакт существует, то команда пополняет список телефонов контакта.
 
+    /*phoneBook.forEach(function (item, i, arr) {
+        if(item.contactName === arrayParametrs[1]) {
+           item.contactNumbers = [];
+           item.contactNumbers.push(arrayParametrs[2]);
+        }
+        console.log('Массив' + item.contactName + item.contactNumbers);
+    });*/
+    var presentContact = getContactByName(requestParams.contactName);
 
-
-        const newContact = {
-            contactName: arrayParametrs[1],
-            toString: function() {
-                console.log('' + this.contactName);
-                return '' + this.contactName;
-            },
-            contactNumbers: arrayParametrs[2],
-
+    if (presentContact) {
+      for(var i = 0; i < requestParams.contactNumbers.length; i++){
+          if (!presentContact.contactNumbers.includes(requestParams.contactNumbers[i])){
+              presentContact.contactNumbers.push(requestParams.contactNumbers[i]);
+          }
+      }
+    } else  {
+        var newContact = {
+            contactName: requestParams.contactName,
+            contactNumbers: requestParams.contactNumbers
         };
-
-        newContact.toString();
         phoneBook.push(newContact);
-        console.log(newContact);
     }
-    console.log(phoneBook);
+}
 
-    if (commandName === 'SHOW') {
-        // Контакт с пустым списком телефонов не должен возвращаться.
+function performShowCommand(requestParams) {
+    // Контакт с пустым списком телефонов не должен возвращаться.
 
-        var mapped = phoneBook.map(function (elem, i) {
-            console.log(elem.contactName);
-            return {index: i, value: String(elem.contactName).toLowerCase()};
-        });
+    var mapped = phoneBook.map(function (elem, i) {
+        console.log(elem.contactName);
+        return {index: i, value: String(elem.contactName).toLowerCase()};
+    });
 
-        console.log(mapped);
+    console.log(mapped);
 
-        mapped.sort(function (contact1, contact2) {
-            if(contact1.value > contact2.value) {
-                return 1;
-            }
-            if(contact1.value < contact2.value) {
-                return -1;
-            }
-            return 0;
-        });
+    mapped.sort(function (contact1, contact2) {
+        if(contact1.value > contact2.value) {
+            return 1;
+        }
+        if(contact1.value < contact2.value) {
+            return -1;
+        }
+        return 0;
+    });
 
-        var result = mapped.map(function (elem) {
-            return phoneBook[elem.index];
-        });
+    var result = mapped.map(function (elem) {
+        return phoneBook[elem.index];
+    });
 
-        console.log(result);
+    console.log(result);
 
-        result.forEach(function (item, i, phoneBook) {
-            document.write(phoneBook[i].contactName + ":" + phoneBook[i].contactNumbers + "<br>");
-        });
-    }
+    result.forEach(function (item, i, phoneBook) {
+        document.write(phoneBook[i].contactName + ":" + phoneBook[i].contactNumbers + "<br>");
+    });
 
-        /*
-               for (i = 0; i < phoneBook.length; i++) {
-                   function sortName(contact1, contact2) {
+}
 
-                       if(contact1.contactName > contact2.contactName) {
-                           return 1;
-                       }
-                       if(contact1.contactName < contact2.contactName) {
-                           return -1;
-                       }
-                       return 0;
-                   }
-                   var result = phoneBook.sort(sortName);
-                   console.log(result);
-                   //document.write(phoneBook[i].contactName + ":" + phoneBook[i].contactNumbers + "<br>");
-               }
-           }
+function performRemovePhoneCommand(requestParams) {
 
-           /*  var mappedBook = phoneBook.map(function (phoneBook[i].contactName, i)
-                   {
-                       return {
-                           index: i,
-                           value: phoneBook[i].contactName.toLowerCase()
-                       }
-                   });
-                   mappedBook.sort(function (a, b) {
-                       if (a.contactName > b.contactName) {
-                           return 1;
-                       }
-                       if (a.contactName < b.contactName) {
-                           return -1;
-                       }
-                       return 0;
-                   });
-
-                   var showContent = mappedBook.map(function (phoneBook[i].contactName)
-                   {
-                       return phoneBook[phoneBook[i].contactName.index];
-                   });*/
-
-        //phoneBook.filter(function(contact) {
-        //    console.log(contact !== "");
-        //    return contact !== "";
-        //});
-
-        //let showContacts = phoneBook.map(contact => contact.contactName + contact.contactNumbers);
-        //document.write(showContacts);
-
-
-
-
-        return commandName;
 }
 
 parametrs('ADD Bame 123,231');
-parametrs('ADD aame 234,556');
+parametrs('ADD aame 222,556');
 parametrs('ADD aame 222,555');
 parametrs('ADD nae');
 parametrs('SHOW');
