@@ -74,11 +74,14 @@ function performAddCommand(requestParams) {
     var presentContact = getContactByName(requestParams.contactName);
 
     if (presentContact) {
-      for(var i = 0; i < requestParams.contactNumbers.length; i++) {
-          if (!presentContact.contactNumbers.includes(requestParams.contactNumbers[i])){
-              presentContact.contactNumbers.push(requestParams.contactNumbers[i]);
-          }
-      }
+        if (requestParams.contactNumbers != null)  {
+            for(var i = 0; i <= requestParams.contactNumbers.length; i++) {
+                if (!presentContact.contactNumbers.includes(requestParams.contactNumbers[i])) {
+                    presentContact.contactNumbers.push(requestParams.contactNumbers[i]);
+                }
+            }
+        }
+
     } else  {
         var newContact = {
             contactName: requestParams.contactName,
@@ -86,7 +89,6 @@ function performAddCommand(requestParams) {
         };
         phoneBook.push(newContact);
     }
-
 }
 
 function performShowCommand(requestParams) {
@@ -171,7 +173,8 @@ function performRemovePhoneCommand(requestParams) {
 parametrs('ADD Bame 123,231');
 parametrs('ADD aame 000,111');
 parametrs('ADD aame 222,333');
-//parametrs('ADD nae');
 parametrs('ADD nae 456,345');
+parametrs('ADD nae 456,555');
+parametrs('ADD nae');
 parametrs('REMOVE_PHONE 111');
 parametrs('SHOW');
