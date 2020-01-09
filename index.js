@@ -29,20 +29,20 @@ function parametrs(requestString) {
 function parseRequestParams(requestString) {
     var arrayParametrs = requestString.split(' ');
 
-        if(arrayParametrs[0] == 'REMOVE_PHONE') {
-            return {
-                command: arrayParametrs[0].toString(),
-                contactNumbers: arrayParametrs[1] ? arrayParametrs[1].split(",") : null
-            }
-
-        } else {
-            return {
-                command: arrayParametrs[0].toString(),
-                contactName: arrayParametrs[1] ? arrayParametrs[1].toString() : "",
-                contactNumbers: arrayParametrs[2] ? arrayParametrs[2].split(",") : null
-            }
-
+    if (arrayParametrs[0] == 'REMOVE_PHONE') {
+        return {
+            command: arrayParametrs[0].toString(),
+            contactNumbers: arrayParametrs[1] ? arrayParametrs[1].split(",") : null
         }
+
+    } else {
+        return {
+            command: arrayParametrs[0].toString(),
+            contactName: arrayParametrs[1] ? arrayParametrs[1].toString() : "",
+            contactNumbers: arrayParametrs[2] ? arrayParametrs[2].split(",") : null
+        }
+
+    }
 }
 
 function getContactByName(contactName) {
@@ -63,15 +63,15 @@ function performAddCommand(requestParams) {
     var presentContact = getContactByName(requestParams.contactName);
 
     if (presentContact) {
-        if (requestParams.contactNumbers != null)  {
-            for(var i = 0; i <= requestParams.contactNumbers.length; i++) {
+        if (requestParams.contactNumbers != null) {
+            for (var i = 0; i <= requestParams.contactNumbers.length; i++) {
                 if (requestParams.contactNumbers[i] && !presentContact.contactNumbers.includes(requestParams.contactNumbers[i])) {
                     presentContact.contactNumbers.push(requestParams.contactNumbers[i]);
                 }
             }
         }
 
-    } else  {
+    } else {
         var newContact = {
             contactName: requestParams.contactName,
             contactNumbers: requestParams.contactNumbers ? requestParams.contactNumbers : []
@@ -80,7 +80,7 @@ function performAddCommand(requestParams) {
     }
 }
 
-function performShowCommand(requestParams) {
+function performShowCommand() {
 
 
     var mapped = phoneBook.map(function (elem, i) {
@@ -89,10 +89,10 @@ function performShowCommand(requestParams) {
 
 
     mapped.sort(function (contact1, contact2) {
-        if(contact1.value > contact2.value) {
+        if (contact1.value > contact2.value) {
             return 1;
         }
-        if(contact1.value < contact2.value) {
+        if (contact1.value < contact2.value) {
             return -1;
         }
         return 0;
@@ -105,7 +105,7 @@ function performShowCommand(requestParams) {
     // Контакт с пустым списком телефонов не должен возвращаться. сделано
 
     result.forEach(function (item, i, phoneBook) {
-        if(item.contactNumbers != null) {
+        if (item.contactNumbers != null) {
             document.write(phoneBook[i].contactName + ":" + phoneBook[i].contactNumbers + "<br>");
         }
     });
@@ -117,18 +117,16 @@ function performRemovePhoneCommand(requestParams) {
     var remotePhoneNumber = requestParams.contactNumbers;
 
 
-
     for (var i = 0; i < phoneBook.length; i++) {
         var currentContact = phoneBook[i];
         var arrayCurrentNumbers = currentContact.contactNumbers;
 
-        if(currentContact.contactNumbers != null) {
-            searchNumberforDeleted(currentContact);
+        if (currentContact.contactNumbers != null) {
+            searchNumberForDeleted(currentContact);
         }
 
 
-
-        function searchNumberforDeleted(currentContact) {
+        function searchNumberForDeleted() {
             for (var i = 0; i < arrayCurrentNumbers.length; i++) {
                 var currentNumber = arrayCurrentNumbers[i];
 
@@ -137,7 +135,7 @@ function performRemovePhoneCommand(requestParams) {
                     arrayCurrentNumbers.splice(indexNumber, 1);
 
                 } else {
-                    currentNumber+i;
+                    currentNumber + i;
                 }
             }
         }
