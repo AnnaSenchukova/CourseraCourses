@@ -8,7 +8,6 @@ var phoneBook = [];
 function parametrs(requestString) {
 
     const requestParams = parseRequestParams(requestString);
-    console.log(requestParams);
 
     switch (requestParams.command) {
         case ("ADD") : {
@@ -85,11 +84,9 @@ function performShowCommand(requestParams) {
 
 
     var mapped = phoneBook.map(function (elem, i) {
-        console.log(elem.contactName);
         return {index: i, value: String(elem.contactName).toLowerCase()};
     });
 
-    console.log(mapped);
 
     mapped.sort(function (contact1, contact2) {
         if(contact1.value > contact2.value) {
@@ -105,7 +102,6 @@ function performShowCommand(requestParams) {
         return phoneBook[elem.index];
     });
 
-    console.log(result);
     // Контакт с пустым списком телефонов не должен возвращаться. сделано
 
     result.forEach(function (item, i, phoneBook) {
@@ -118,17 +114,13 @@ function performShowCommand(requestParams) {
 
 function performRemovePhoneCommand(requestParams) {
     //Удаляет телефон из телефонной книги. Если телефон успешно удалён, то функция должна вернуть true. Если такого телефона в телефонной книге не существует, то возвращается false.
-    console.log(requestParams);
     var remotePhoneNumber = requestParams.contactNumbers;
 
-    console.log("номер телефона который нужно удалить" + remotePhoneNumber);
 
 
     for (var i = 0; i < phoneBook.length; i++) {
         var currentContact = phoneBook[i];
         var arrayCurrentNumbers = currentContact.contactNumbers;
-        console.log(currentContact);
-        console.log(arrayCurrentNumbers);
 
         if(currentContact.contactNumbers != null) {
             searchNumberforDeleted(currentContact);
@@ -140,15 +132,10 @@ function performRemovePhoneCommand(requestParams) {
             for (var i = 0; i < arrayCurrentNumbers.length; i++) {
                 var currentNumber = arrayCurrentNumbers[i];
 
-
-                console.log("текущий номер для сравнения: " + currentNumber);
-
                 if (currentNumber == remotePhoneNumber) {
                     var indexNumber = i;
-                    console.log(indexNumber);
                     arrayCurrentNumbers.splice(indexNumber, 1);
 
-                    console.log("Массив телефонов после удаления: " + arrayCurrentNumbers);
                 } else {
                     currentNumber+i;
                 }
