@@ -5,39 +5,40 @@ var phoneBook = [];
  * @param {String} command
  * @returns {*} - результат зависит от команды
  */
-function parametrs(requestString) {
+module.exports = function (command) {
+    const requestParams = parseRequestParams(command);
 
-    const requestParams = parseRequestParams(requestString);
-
-    switch (requestParams.command) {
+    switch (requestParams.commandKey) {
         case ("ADD") : {
             performAddCommand(requestParams);
             break;
         }
         case ("SHOW") : {
-            performShowCommand(requestParams);
-            break;
+            return performShowCommand(requestParams);
         }
         case ("REMOVE_PHONE") : {
-            performRemovePhoneCommand(requestParams);
-            break;
+            //return performRemovePhoneCommand(requestParams);
+            var removeResult = false;
+            removeResult = performRemovePhoneCommand(requestParams);
+            //console.log("removeResult = |" + removeResult + "|");
+            return removeResult;
         }
-        // default :
     }
-}
+};
 
-function parseRequestParams(requestString) {
-    var arrayParametrs = requestString.split(' ');
+
+function parseRequestParams(command) {
+    var arrayParametrs = command.split(' ');
 
     if (arrayParametrs[0] == 'REMOVE_PHONE') {
         return {
-            command: arrayParametrs[0].toString(),
+            commandKey: arrayParametrs[0].toString(),
             contactNumbers: arrayParametrs[1] ? arrayParametrs[1].split(",") : null
         }
 
     } else {
         return {
-            command: arrayParametrs[0].toString(),
+            commandKey: arrayParametrs[0].toString(),
             contactName: arrayParametrs[1] ? arrayParametrs[1].toString() : "",
             contactNumbers: arrayParametrs[2] ? arrayParametrs[2].split(",") : null
         }
@@ -81,12 +82,11 @@ function performAddCommand(requestParams) {
 }
 
 function performShowCommand() {
-
+    var arrayToShow = [];
 
     var mapped = phoneBook.map(function (elem, i) {
         return {index: i, value: String(elem.contactName).toLowerCase()};
     });
-
 
     mapped.sort(function (contact1, contact2) {
         if (contact1.value > contact2.value) {
@@ -105,48 +105,58 @@ function performShowCommand() {
     // Контакт с пустым списком телефонов не должен возвращаться. сделано
 
     result.forEach(function (item, i, phoneBook) {
-        if (item.contactNumbers != null) {
-            document.write(phoneBook[i].contactName + ":" + phoneBook[i].contactNumbers + "<br>");
+        if (item.contactNumbers.length > 0) {
+
+            var numbers = "";
+            phoneBook[i].contactNumbers.forEach(function(phoneBookItem) {
+                numbers += (phoneBookItem + ", ")
+            });
+            numbers = numbers.substr(0,numbers.length - 2);
+            arrayToShow.push(phoneBook[i].contactName + ": " + numbers);
+            //console.log(arrayToShow);
+            //console.log(item.contactNumbers);
         }
     });
-
+    //console.log('TotalShow: ' + arrayToShow);
+    return arrayToShow;
 }
 
 function performRemovePhoneCommand(requestParams) {
     //Удаляет телефон из телефонной книги. Если телефон успешно удалён, то функция должна вернуть true. Если такого телефона в телефонной книге не существует, то возвращается false.
-    var remotePhoneNumber = requestParams.contactNumbers;
 
+    var remotePhoneNumber = requestParams.contactNumbers;
+    var searchResult2;
+    //console.log(remotePhoneNumber);
 
     for (var i = 0; i < phoneBook.length; i++) {
         var currentContact = phoneBook[i];
         var arrayCurrentNumbers = currentContact.contactNumbers;
-
+        //console.log('Просматриваемый контакт: ' + currentContact.contactName);
         if (currentContact.contactNumbers != null) {
-            searchNumberForDeleted(currentContact);
+            searchResult2 = searchNumberForDeleted(currentContact);
+            if (searchResult2 == true) return searchResult2;
         }
 
-
         function searchNumberForDeleted() {
+            var searchResult = false;
             for (var i = 0; i < arrayCurrentNumbers.length; i++) {
                 var currentNumber = arrayCurrentNumbers[i];
 
                 if (currentNumber == remotePhoneNumber) {
                     var indexNumber = i;
                     arrayCurrentNumbers.splice(indexNumber, 1);
+                    searchResult = true;
+                    //console.log('Delete phone: ' + currentNumber);
+                    break;
 
                 } else {
-                    currentNumber + i;
+                    currentNumber ++;
                 }
             }
+            return searchResult;
         }
     }
+    //console.log("searchResult = |" + searchResult + "|");
+    return searchResult2;
 }
 
-parametrs('ADD Bame 123,231');
-parametrs('ADD aame 000,111');
-parametrs('ADD aame 222,333');
-parametrs('ADD nae');
-parametrs('ADD nae 456,345');
-parametrs('ADD nae 456,555');
-parametrs('REMOVE_PHONE 111');
-parametrs('SHOW');
